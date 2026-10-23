@@ -312,6 +312,14 @@ footer .copy-line{flex-basis:100%;font-size:.84rem;border-top:1px solid var(--li
 .fab svg{width:24px;height:24px}
 @media (max-width:520px){.fab span{display:none}.fab{padding:15px}}
 
+
+/* iOS Safari: date/time inputs keep their own width and centre the text */
+input[type="date"],input[type="time"]{-webkit-appearance:none;appearance:none;display:block;width:100%;max-width:100%;min-width:0;min-height:48px;text-align:left;line-height:1.3}
+input[type="date"]::-webkit-date-and-time-value,input[type="time"]::-webkit-date-and-time-value{text-align:left;margin:0}
+input[type="date"]::-webkit-calendar-picker-indicator,input[type="time"]::-webkit-calendar-picker-indicator{opacity:.6}
+.f input,.f select,.bf input,.bf select{min-height:48px}
+.fab{transition:transform .25s,opacity .25s}
+.fab.away{opacity:0;transform:translateY(20px);pointer-events:none}
 @keyframes fade{0%{opacity:0}5%{opacity:1}33%{opacity:1}39%{opacity:0}100%{opacity:0}}
 @keyframes zoom{from{transform:scale(1.02)}to{transform:scale(1.12)}}
 @keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
@@ -808,6 +816,16 @@ footer .copy-line{flex-basis:100%;font-size:.84rem;border-top:1px solid var(--li
     });
     paint();
   });
+
+  /* hide floating WA button while a form with its own WhatsApp button is on screen */
+  try {
+    var fab = document.querySelector('.fab'), seen = new Set();
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ e.isIntersecting ? seen.add(e.target) : seen.delete(e.target); });
+      fab.classList.toggle('away', seen.size > 0);
+    }, { rootMargin: '0px 0px -10% 0px' });
+    ['b-send','c-send','q-send'].forEach(function(id){ io.observe($(id)); });
+  } catch (e) {}
 
   updateQuick(); updateCi();
 
