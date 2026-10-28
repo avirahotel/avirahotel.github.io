@@ -215,7 +215,7 @@ section{padding-block:clamp(70px,9vw,120px)}
 .jiwa-photos .main{border-radius:4px;overflow:hidden;aspect-ratio:4/5;max-width:100%;max-height:640px;margin-left:auto}
 .jiwa-photos .main img{width:100%;height:100%;object-fit:cover}
 .jiwa-photos .mini{position:absolute;width:36%;left:-26px;bottom:-30px;border-radius:4px;overflow:hidden;border:6px solid var(--jiwa);aspect-ratio:3/4}
-.jiwa-photos .mini img{width:100%;height:100%;object-fit:cover}
+.jiwa-photos .mini img,.jiwa-photos .mini video{width:100%;height:100%;object-fit:cover;display:block}
 .jiwa .split{grid-template-columns:1.1fr .9fr}
 .jiwa .split .jiwa-photos{order:-1}
 @media (max-width:860px){.jiwa .split{grid-template-columns:1fr}.jiwa-photos{margin:0 0 30px 0}.jiwa-photos .mini{left:10px}}
@@ -550,8 +550,8 @@ input[type="date"]::-webkit-calendar-picker-indicator,input[type="time"]::-webki
       <a class="btn" href="https://www.instagram.com/kopijanjijiwa.mksavirahotelll/" target="_blank" rel="noopener">Lihat Instagram Janji Jiwa</a>
     </div>
     <div class="jiwa-photos rv">
-      <div class="main"><img src="img/jiwa-interior.webp" alt="Interior kafe Janji Jiwa dengan kursi kayu dan meja putih" width="900" height="1200" loading="lazy"></div>
-      <div class="mini"><img src="img/jiwa-counter.webp" alt="Meja pemesanan Janji Jiwa dengan papan menu digital" width="675" height="900" loading="lazy"></div>
+      <div class="main"><img src="img/jiwa-interior-2.webp" alt="Interior kafe Janji Jiwa dengan kursi kayu, sofa, dan rak kopi" width="900" height="1200" loading="lazy"></div>
+      <div class="mini"><video id="jiwaVid" src="img/jiwa-drinks.mp4" poster="img/jiwa-drinks.webp" muted loop playsinline autoplay preload="metadata" aria-label="Video minuman Janji Jiwa disiapkan di bar"></video></div>
     </div>
   </div>
 </section>
@@ -836,6 +836,13 @@ input[type="date"]::-webkit-calendar-picker-indicator,input[type="time"]::-webki
     else { err.textContent = 'Pilih tanggal kedatangan.'; $('c-date').focus(); }
   });
   $('form-ci').addEventListener('submit', function(e){ e.preventDefault(); });
+
+  /* Janji Jiwa video: no autoplay for reduced motion, pause offscreen */
+  try {
+    var jv = document.getElementById('jiwaVid');
+    if (reduce) { jv.removeAttribute('autoplay'); jv.pause(); }
+    else new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? jv.play().catch(function(){}) : jv.pause(); }); }).observe(jv);
+  } catch (e) {}
 
   /* Room galleries */
   document.querySelectorAll('.gallery').forEach(function(g){
